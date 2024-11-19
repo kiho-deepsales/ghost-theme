@@ -6,7 +6,7 @@
     </ul>
 {{else}}
     <ul class="nav" role="menu" id="nav-header">
-        {{#match url "/ko/"}}
+        {{#has slug="/ko/slug"}}
             <li class="nav-press-releases"><a href="https://blog.deepsales.com/ko/press-releases/">소식</a></li>
             <li class="nav-case-studies"><a href="https://blog.deepsales.com/ko/case-studies/">성공 사례</a></li>
             <li class="nav-insights"><a href="https://blog.deepsales.com/ko/insights/">인사이트</a></li>
@@ -14,14 +14,13 @@
             <li class="nav-newsletters"><a href="https://blog.deepsales.com/ko/newsletters/">뉴스레터</a></li>
         {{else}}
             <script>
-                console.log( {{ url }} );
+                console.log( {{ slug }} );
             </script>
             <li class="nav-press-releases"><a href="https://blog.deepsales.com/press-releases/">Press Releases</a></li>
             <li class="nav-case-studies"><a href="https://blog.deepsales.com/case-studies/">Case Studies</a></li>
             <li class="nav-insights"><a href="https://blog.deepsales.com/insights/">Insights</a></li>
             <li class="nav-tutorials"><a href="https://blog.deepsales.com/tutorials/">Tutorials</a></li>
             <li class="nav-newsletters"><a href="https://blog.deepsales.com/newsletters/">Newsletters</a></li>
-            
-        {{/match}}
+        {{/has}}
     </ul>
 {{/if}}
