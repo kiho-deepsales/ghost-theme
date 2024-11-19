@@ -188,6 +188,8 @@
 
     <script>
     var currentUrl = window.location.pathname;
+    console.log(currentUrl);
+    console.log(currentUrl.includes('/ko/'));
     if (currentUrl.includes('/ko/')) {        
         var logoLink = document.querySelector('.gh-head-logo');
         if (logoLink) {
