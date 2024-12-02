@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="{{{block "lang"}}}">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{meta_title}}</title>
+    <link rel="stylesheet" href="{{asset "built/screen.css"}}">
+
+    {{ghost_head}}
+</head>
+
+<body class="{{body_class}}{{block "body_class"}}  is-head-{{#match @custom.navigation_layout "Logo on the left"}}left-logo{{else match @custom.navigation_layout "Logo in the middle"}}middle-logo{{else}}stacked{{/match}}{{#match @custom.title_font "=" "Elegant serif"}} has-serif-title{{/match}}{{#match @custom.body_font "=" "Elegant serif"}} has-serif-body{{/match}}">
+    <div class="site">
+        <header id="gh-head" class="gh-head gh-outer">
+            <div class="gh-head-inner gh-inner">
+                <div class="gh-head-brand">
+                    <div class="gh-head-brand-wrapper">
+                        <a class="gh-head-logo" href="{{@site.url}}">
+                            {{#if @site.logo}}
+                                <img src="{{@site.logo}}" alt="{{@site.title}}">
+                            {{else}}
+                                {{@site.title}}
+                            {{/if}}
+                        </a>
+                    </div>
+                    <button class="gh-search gh-icon-btn" aria-label="Search this site" data-ghost-search>{{> "icons/search"}}</button>
+                    <button class="gh-burger"></button>
+                </div>
+
+                <nav class="gh-head-menu">
+                    {{navigation}}
+                    {{#unless @site.members_enabled}}
+                        {{#match @custom.navigation_layout "Stacked"}}
+                            <button class="gh-search gh-icon-btn" aria-label="Search this site" data-ghost-search>{{> "icons/search"}}</button>
+                        {{/match}}
+                    {{/unless}}
+                </nav>
+
+                <div class="gh-head-actions">
+                    {{#unless @site.members_enabled}}
+                        {{^match @custom.navigation_layout "Stacked"}}
+                            <button class="gh-search gh-icon-btn" aria-label="Search this site" data-ghost-search>{{> "icons/search"}}</button>
+                        {{/match}}
+                    {{else}}
+                        <button class="gh-search gh-icon-btn" aria-label="Search this site" data-ghost-search>{{> "icons/search"}}</button>
+                        <div class="gh-head-members">
+                            {{#unless @member}}
+                                {{#unless @site.members_invite_only}}
+                                    <a class="gh-head-link" href="#/portal/signin" data-portal="signin">Sign in</a>
+                                    <a class="gtm-subs-btn gh-head-btn gh-btn gh-primary-btn" href="#/portal/signup" data-portal="signup">Subscribe</a>
+                                {{else}}
+                                    <a class="gh-head-btn gh-btn gh-primary-btn" href="#/portal/signin" data-portal="signin">Sign in</a>
+                                {{/unless}}
+                            {{else}}
+                                <a class="gh-head-btn gh-btn gh-primary-btn" href="#/portal/account" data-portal="account">Account</a>
+                            {{/unless}}
+                        </div>
+                        <a id="lang_link" href="https://blog.deepsales.com/">ENG</a>
+                        <a id="lang_link" href="https://blog.deepsales.com/ko/">KOR</a>
+                    {{/unless}}
+                </div>
+            </div>
+        </header>
+
+        {{#is "home, ko"}}
+        <div class="site-cover{{#unless @site.cover_image}} no-image{{/unless}} u-overlay">
+
+            {{#if @site.cover_image}}
+                <img class="cover-image jarallax-img u-object-fit" src="{{img_url @site.cover_image}}" alt="{{@site.title}}">
+            {{/if}}
+
+            <div class="cover-content">
+                {{#if @site.description}}
+                    <div class="cover-description">{{@site.description}}</div>
+                {{/if}}
+                <div class="search">
+                    <form class="search-form">
+                        <div class="form-wrapper">
+                            <div class="search-field" data-ghost-search>Search posts, tags, authors...</div>
+                            <button class="form-button search-button" type="submit" data-ghost-search>
+                                {{> "icons/search"}}
+                                {{> "icons/close"}}
+                            </button>
+                        </div>
+                    </form>
+                    <div class="search-result"></div>
+                </div>
+            </div>
+
+        </div>
+        {{/is}}
+        
+        <div class="site-content">
+            {{{body}}}
+        </div>
+
+        <footer class="gh-foot{{#unless @site.secondary_navigation}} no-menu{{/unless}} gh-outer">
+            <div class="gh-foot-inner gh-inner">
+                <div class="gh-copyright">
+                    {{@site.title}} © {{date format="YYYY"}}
+                </div>
+                {{#if @site.secondary_navigation}}
+                    <nav class="gh-foot-menu">
+                        {{navigation type="secondary"}}
+                    </nav>
+                {{/if}}
+                {{!-- <div class="gh-powered-by">
+                    <a href="https://ghost.org/" target="_blank" rel="noopener">Powered by Ghost</a>
+                </div> --}}
+            </div>
+        </footer>
+
+    </div>
+
+    {{#is "post, page"}}
+        {{> "pswp"}}
+    {{/is}}
+
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous">
+    </script>
+    <script src="{{asset "built/main.min.js"}}"></script>
+
+    {{ghost_foot}}
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var subscribeButton = document.querySelector('.gtm-subs-btn.gh-head-btn.gh-btn.gh-primary-btn');
+    var observer;
+
+    subscribeButton.addEventListener('click', function(event) {
+        var iframePopup = document.querySelector('iframe[data-testid="portal-popup-frame"]');
+
+        if (iframePopup) {
+            trackSignUpButton(iframePopup);
+            return;
+        }
+        
+        if (observer) {
+            return;
+        }
+        
+        var targetNode = document.body;
+        var config = { childList: true, subtree: true };
+        var callback = function(mutationsList, observer) {
+            for (var mutation of mutationsList) {
+                if (mutation.type === 'childList') {
+                var iframePopup = document.querySelector('iframe[data-testid="portal-popup-frame"]');
+                if (iframePopup) {
+                    trackSignUpButton(iframePopup);
+                    observer.disconnect();
+                    break;
+                }
+                }
+            }
+        };
+
+        observer = new MutationObserver(callback);
+        observer.observe(targetNode, config);
+    });
+
+    function trackSignUpButton(iframe) {
+        iframe.addEventListener('load', function() {
+            var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+            var signUpButton = iframeDocument.querySelector('.gh-portal-btn.gh-portal-btn-main.gh-portal-btn-primary');
+            if (signUpButton) {
+                signUpButton.addEventListener('click', function() {
+                var successObserver = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.addedNodes.length > 0) {
+                            var successMessage = iframeDocument.querySelector('.gh-portal-main-title');
+                            if (successMessage && successMessage.textContent.includes("Now check your email!")) {
+                            dataLayer.push({'event': 'Sign Up'});
+                            successObserver.disconnect();
+                            }
+                        }
+                    });
+                });
+
+                successObserver.observe(iframeDocument.body, { childList: true, subtree: true });
+                });
+            }
+        });
+    }
+    });
+    </script>
+
+    <script>
+    var currentUrl = window.location.pathname;
+    if (currentUrl.includes('/ko/')) {        
+        var logoLink = document.querySelector('.gh-head-logo');
+        if (logoLink) {
+            var siteUrl = "{{@site.url}}";
+            logoLink.href = siteUrl + "/ko/";
+        }
+
+        var loginButton = document.querySelector('.gh-head-link');
+        if (loginButton) {
+            loginButton.textContent = "로그인"
+        }
+
+        var subscribeButton = document.querySelector('.gtm-subs-btn');
+        if (subscribeButton) {
+            subscribeButton.textContent = "구독하기"
+        }
+
+        var coverDescription = document.querySelector('.cover-description');
+        if (coverDescription) {
+            coverDescription.textContent = "당신의 다음 잠재 고객을 찾아보세요.";
+        }
+
+        var navHeader = document.getElementById('nav-header');
+        navHeader.innerHTML = `
+            <li class="nav-press-releases"><a href="https://blog.deepsales.com/ko/press-releases/">소식</a></li>
+            <li class="nav-case-studies"><a href="https://blog.deepsales.com/ko/case-studies/">성공 사례</a></li>
+            <li class="nav-insights"><a href="https://blog.deepsales.com/ko/insights/">인사이트</a></li>
+            <li class="nav-tutorials"><a href="https://blog.deepsales.com/ko/tutorials/">튜토리얼</a></li>
+            <li class="nav-newsletters"><a href="https://blog.deepsales.com/ko/newsletters/">뉴스레터</a></li>
+        `;
+        };
+    </script>
+</body>
+</html>

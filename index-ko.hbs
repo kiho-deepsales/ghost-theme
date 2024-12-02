@@ -1,0 +1,63 @@
+{{!< default}}
+
+{{#contentFor "lang"}}ko{{/contentFor}}
+
+<div class="gh-outer">
+<main class="site-main gh-inner">
+
+    {{#if @custom.show_featured_posts}}
+        {{> "featured-posts-ko"}}
+    {{/if}}
+
+    {{#get "tags" limit="all"}}
+    <div class="topic-feed">
+
+        {{#foreach tags}}
+            <section class="topic">
+                <header class="topic-header">
+                    <h2 class="topic-name">
+                        {{#has slug="press-releases"}}
+                            <a href="/ko{{url}}">소식</a>
+                        {{else}}
+                            {{#has slug="case-studies"}}
+                                <a href="/ko{{url}}">성공 사례</a>
+                            {{else}}
+                                {{#has slug="insights"}}
+                                    <a href="/ko{{url}}">인사이트</a>
+                                {{else}}
+                                    {{#has slug="tutorials"}}
+                                        <a href="/ko{{url}}">튜토리얼</a>
+                                    {{else}}
+                                        {{#has slug="newsletters"}}
+                                            <a href="/ko{{url}}">뉴스레터</a>
+                                        {{else}}
+                                            <a href="/ko{{url}}">{{name}}</a>
+                                        {{/has}}
+                                    {{/has}}
+                                {{/has}}
+                            {{/has}}
+                        {{/has}}
+                    </h2>
+                </header>
+                {{#get "posts" order="published_at desc" filter="tag:{{slug}}+tag:hash-ko" limit="5" as |featured|}}
+                    <ul class="topic-article-feed">
+                        {{#foreach featured}}
+                        <li class="topic-article">
+                            <h3 class="topic-article-title">
+                                <a class="topic-article-link" href="{{url}}">
+                                    {{> "icons/chevron-right"}} {{title}}
+                                </a>
+                            </h3>
+                        </li>
+                        {{/foreach}}
+                    </ul>
+                {{/get}}
+                <a class="topic-more" href="/ko{{url}}">더보기 →</a>
+            </section>
+        {{/foreach}}
+
+    </div>
+    {{/get}}
+
+</main>
+</div>
