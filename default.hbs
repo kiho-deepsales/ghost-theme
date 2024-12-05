@@ -43,6 +43,8 @@
                             <button class="gh-search gh-icon-btn" aria-label="Search this site" data-ghost-search>{{> "icons/search"}}</button>
                         {{/match}}
                     {{else}}
+                        <a id="lang_btn" href="https://blog.deepsales.com/">ENG</a>
+                        <a id="lang_btn" href="https://blog.deepsales.com/ko/">KOR</a>
                         <button class="gh-search gh-icon-btn" aria-label="Search this site" data-ghost-search>{{> "icons/search"}}</button>
                         <div class="gh-head-members">
                             {{#unless @member}}
@@ -56,8 +58,6 @@
                                 <a class="gh-head-btn gh-btn gh-primary-btn" href="#/portal/account" data-portal="account">Account</a>
                             {{/unless}}
                         </div>
-                        <a id="lang_link" href="https://blog.deepsales.com/">ENG</a>
-                        <a id="lang_link" href="https://blog.deepsales.com/ko/">KOR</a>
                     {{/unless}}
                 </div>
             </div>
